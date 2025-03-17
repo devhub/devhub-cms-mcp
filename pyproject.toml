@@ -1,7 +1,7 @@
 [project]
 name = "devhub-cms-mcp"
-version = "0.1.0"
-description = "DevHub CMS integration through the Model Context Protocol"
+version = "0.2.0"
+description = "DevHub CMS LLM integration through the Model Context Protocol"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

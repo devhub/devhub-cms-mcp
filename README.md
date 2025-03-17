@@ -6,7 +6,33 @@ A Model Context Protocol (MCP) integration for managing content in the DevHub CM
 
 You will need the [uv](https://github.com/astral-sh/uv) package manager installed on your local system.
 
-### Clone the repo
+### Manual configuration of Claude Desktop
+
+To use this server with the Claude Desktop app, add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
+
+```
+{
+    "mcpServers": {
+        "devhub_cms_mcp": {
+            "command": "uvx",
+            "args": [
+                "devhub-cms-mcp"
+            ],
+            "env": {
+                "DEVHUB_API_KEY": "YOUR_KEY_HERE",
+                "DEVHUB_API_SECRET": "YOUR_SECRET_HERE",
+                "DEVHUB_BASE_URL": "https://yourbrand.cloudfrontend.net"
+            }
+        }
+    }
+}
+```
+
+After updating the config, restart Claude Desktop.
+
+## Local development
+
+### Clone the repo (or your fork)
 
 ```
 git clone git@github.com:devhub/devhub-cms-mcp.git
@@ -14,7 +40,7 @@ git clone git@github.com:devhub/devhub-cms-mcp.git
 
 ### Manual configuration of Claude Desktop
 
-To use this server with the Claude Desktop app, add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
+To use this server with the Claude Desktop app for local development, add the following configuration to the "mcpServers" section of your `claude_desktop_config.json`:
 
 ```
 {
@@ -37,7 +63,9 @@ To use this server with the Claude Desktop app, add the following configuration 
 }
 ```
 
-## Configuration
+After updating the config, restart Claude Desktop.
+
+### Configuration for running with `uv` directly
 
 This MCP requires the following environment variables to be set:
 
@@ -45,6 +73,12 @@ This MCP requires the following environment variables to be set:
 export DEVHUB_API_KEY="your_api_key"
 export DEVHUB_API_SECRET="your_api_secret"
 export DEVHUB_BASE_URL="https://yourbrand.cloudfrontend.net"
+```
+
+Then run the MCP
+
+```
+uv run main.py
 ```
 
 ## Available Tools
@@ -69,4 +103,4 @@ This MCP provides the following tools for interacting with DevHub CMS:
 
 ## Usage with LLMs
 
-This MCP is designed to be used with Large Language Models that support the Model Context Protocol. It allows LLMs to manage content in DevHub CMS without needing direct API access.
+This MCP is designed to be used with Large Language Models that support the Model Context Protocol. It allows LLMs to manage content in DevHub CMS without needing direct API access integrated into the LLM natively.
