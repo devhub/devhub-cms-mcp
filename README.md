@@ -1,10 +1,20 @@
 # DevHub CMS MCP
 
+[![smithery badge](https://smithery.ai/badge/@devhub/devhub-cms-mcp)](https://smithery.ai/server/@devhub/devhub-cms-mcp)
+
 A Model Context Protocol (MCP) integration for managing content in the [DevHub CMS system](https://www.devhub.com/).
 
 ## Installation
 
 You will need the [uv](https://github.com/astral-sh/uv) package manager installed on your local system.
+
+### Installing via Smithery
+
+To install DevHub CMS MCP for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@devhub/devhub-cms-mcp):
+
+```bash
+npx -y @smithery/cli install @devhub/devhub-cms-mcp --client claude
+```
 
 ### Manual configuration of Claude Desktop
 
