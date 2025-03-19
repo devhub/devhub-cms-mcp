@@ -1,0 +1,38 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - devhubApiKey
+      - devhubApiSecret
+      - devhubBaseUrl
+    properties:
+      devhubApiKey:
+        type: string
+        description: DevHub API Key for authentication.
+      devhubApiSecret:
+        type: string
+        description: DevHub API Secret for authentication.
+      devhubBaseUrl:
+        type: string
+        description: Base URL for the DevHub CMS API, e.g.
+          https://yourbrand.cloudfrontend.net
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'python',
+      args: ['main.py'],
+      env: {
+        DEVHUB_API_KEY: config.devhubApiKey,
+        DEVHUB_API_SECRET: config.devhubApiSecret,
+        DEVHUB_BASE_URL: config.devhubBaseUrl
+      }
+    })
+  exampleConfig:
+    devhubApiKey: example_api_key
+    devhubApiSecret: example_api_secret
+    devhubBaseUrl: https://example.devhub.com
