@@ -46,10 +46,10 @@ You can add the `devhub-cms-mcp` by updating the environment variables below
 
 ```
 claude mcp add devhub-cms-mcp \
-	-e DEVHUB_API_KEY=YOUR_KEY_HERE \
-	-e DEVHUB_API_SECRET=YOUR_SECRET_HERE \
-	-e DEVHUB_BASE_URL=https://yourbrand.cloudfrontend.net \
-	-- uvx devhub-cms-mcp
+    -e DEVHUB_API_KEY=YOUR_KEY_HERE \
+    -e DEVHUB_API_SECRET=YOUR_SECRET_HERE \
+    -e DEVHUB_BASE_URL=https://yourbrand.cloudfrontend.net \
+    -- uvx devhub-cms-mcp
 ```
 
 ### Installing via Smithery
@@ -115,11 +115,14 @@ uv run main.py
 
 This MCP provides the following tools for interacting with DevHub CMS:
 
-### Location Management
+### Business and Location Management
 
-- **get_hours_of_operation(location_id)**: Gets the hours of operation for a specific DevHub location. Returns a structured list of time ranges for each day of the week.
+- **get_businesses()**: Gets all businesses within the DevHub account. Returns a list of businesses with their IDs and names.
+- **get_locations(business_id)**: Gets all locations for a specific business. Returns detailed location information including address, coordinates, and URLs.
+- **get_hours_of_operation(location_id, hours_type='primary')**: Gets the hours of operation for a specific DevHub location. Returns a structured list of time ranges for each day of the week.
 - **update_hours(location_id, new_hours, hours_type='primary')**: Updates the hours of operation for a DevHub location.
 - **get_nearest_location(business_id, latitude, longitude)**: Finds the nearest DevHub location based on geographic coordinates.
+- **site_from_url(url)**: Gets the DevHub site ID and details from a URL. Returns site ID, URL, and associated location IDs.
 
 ### Content Management
 

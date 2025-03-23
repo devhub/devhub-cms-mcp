@@ -1,5 +1,6 @@
 import json
 import os
+from urllib.parse import urlparse
 
 from mcp.server.fastmcp import FastMCP
 from requests_oauthlib import OAuth1Session
@@ -46,6 +47,66 @@ def get_hours_of_operation(location_id: int, hours_type: str = 'primary') -> lis
 
 
 @mcp.tool()
+def get_businesses() -> list:
+    """Get all businesses within the DevHub account
+
+    Returns a list of businesses with the following fields:
+    - id: Business ID that can be used in the other tools
+    - business_name: Business name
+
+    If only one business exists in the account, you can assume that the user wants to use that business for any business_id related tools.
+    """
+    client, base_url = get_client()
+    params = {
+        'deleted': 0,
+        'limit': 20,
+        'order_by': 'business_name',
+        'project_type': 'default',
+    }
+    r = client.get('{}businesses/'.format(base_url), params=params)
+    content = json.loads(r.content)
+    return content['objects']
+
+
+@mcp.tool()
+def get_locations(business_id: int) -> list:
+    """Get all locations for a business
+
+    Returns a list of locations with the following fields:
+    - id: Location ID that can be used in the other tools
+    - location_name: Location name
+    - location_url: Location URL in DevHub
+    - street: Street address
+    - city: City
+    - state: State
+    - country: Country
+    - postal_code: Postal code
+    - lat: Latitude
+    - lon: Longitude
+    """
+    client, base_url = get_client()
+    params = {
+        'business_id': business_id,
+        'limit': 600,
+        'order_by': 'location_name',
+    }
+    r = client.get('{}locations/'.format(base_url), params=params)
+    content = json.loads(r.content)
+    return [{
+        'id': location['id'],
+        'location_name': location['location_name'],
+        'location_url': location['location_url'],
+        'street': location['street'],
+        'city': location['city'],
+        'state': location['state'],
+        'country': location['country'],
+        'postal_code': location['postal_code'],
+        'lat': location['lat'],
+        'lon': location['lon'],
+    } for location in content['objects']]
+
+
+@mcp.tool()
 def update_hours(location_id: int, new_hours: list, hours_type: str = 'primary') -> str:
     """Update the hours of operation for a DevHub location
 
@@ -79,6 +140,42 @@ def update_hours(location_id: int, new_hours: list, hours_type: str = 'primary')
     )
     content = json.loads(r.content)
     return 'Updated successfully'
+
+
+@mcp.tool()
+def site_from_url(url: str) -> str:
+    """Get the DevHub site ID from a URL.
+
+    Can prompt the user for the URL instead of passing a site_id.
+
+    Returns details about the Site matches the URL that can be used in the other tools.
+    - Site ID: ID of the DevHub site
+    - Site URL: URL of the DevHub site
+    - Site Location IDs: List of location IDs associated with the site
+
+    Args:
+        url: URL of the DevHub site, all lowercase and ends with a slash
+    """
+    parsed_url = urlparse(url)
+    subdomain = parsed_url.netloc.split('.', 1)[0] or 'www'
+    domain = parsed_url.netloc.split('.', 1)[1]
+    base_directory = parsed_url.path
+    client, base_url = get_client()
+    r = client.get('{}sites/'.format(base_url), params={
+        'base_directory': base_directory,
+        'deleted': 0,
+        'domain': domain,
+        'subdomain': subdomain,
+    })
+    content = json.loads(r.content)
+    if len(content['objects']) == 0:
+        return 'No site found'
+    site = content['objects'][0]
+    return f"""
+Site ID: {site['id']}
+Site URL: {site['formatted_url']}
+Site Location IDs: {", ".join([str(location_id) for location_id in site['location_ids']])}
+"""
 
 
 @mcp.tool()
