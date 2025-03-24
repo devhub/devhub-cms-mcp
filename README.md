@@ -153,13 +153,13 @@ uv pip install -e ".[test]"
 Run the tests with pytest:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 For more detailed output and test coverage information:
 
 ```bash
-pytest -v --cov=devhub_cms_mcp
+uv run pytest -v --cov=devhub_cms_mcp
 ```
 
 ### Test Structure
